@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import argparse
+from random import randint
 
 #parsing option from users
 parser = argparse.ArgumentParser(description='we trust in probability')
@@ -31,14 +32,64 @@ class State:
     def getScore(self):
         self.score = 0
         for i in range(0,len(self.board)):
-            for j in l[i]:
+            for j in self.board[i]:
                 if (j == 'x'):
                     self.score -= 10
         return self.score
         
+    def nextState(self):
+        nextState = State()
+        #while (nextState.getScore()<=self.getScore()):
+        i1 = randint(0, r-1)
+        i2 = randint(0, c-1)
+            #if (self.board[i1][i2] == 'x'):
+        nextState.board[i1][i2] = 'b'
+        
+        return nextState
+        
+
+
+
+
+def hillclimb(state):
+    potentialState = []
+    countState = 0
+    countTime = 0
+    currentState = state
+    potentialState.append(currentState)
+    while (countState < 10):
+        currentState = potentialState.pop()
+        nextState = currentState.nextState()
+        if (nextState.getScore()>currentState.getScore()):
+            currentState = nextState
+            countTime = 0
+        else:
+            countTime +=1
+        
+        potentialState.append(currentState)
+        
+        if (countTime == 10):
+            countTime = 0
+            countState +=1
+            currentState = state
+            potentialState.append(currentState)
+    
+    bestState = potentialState[0]
+    for i in range(0, len(potentialState)):
+        if (potentialState[i].getScore() > bestState.getScore()):
+            bestState = potentialState[i]
+
+    return bestState
+
+
+
 
 initialState = State();
+
 print(initialState.getScore())
+bestState = hillclimb(initialState)
+print(bestState.board)
+print(bestState.getScore())
 # print(test.bin1)
 # print(test.bin2)
 # print(test.bin3)
